@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: 立刻开始
-      link: html
+      link: /note/html
   image:
         # 首页右边的图片
       src: /avatar.jpg
