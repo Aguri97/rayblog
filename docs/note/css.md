@@ -115,7 +115,9 @@ CSS 盒模型本质上是一个盒子，封装周围的 HTML 元素，它包括�
   - 类：选择器中包含类选择器、属性选择器或者伪类则十位得一分。
   - 元素：选择器中包含元素、伪元素选择器则个位得一分。
 
-  > **备注:** 通用选择器（\*）、组合符（+、>、~、' '）和调整优先级的选择器（:where()）不会影响优先级。
+  ::: info **备注：**
+  通用选择器（\*）、组合符（+、>、~、' '）和调整优先级的选择器（:where()）不会影响优先级。
+  :::
 
   | 选择器                                  | ID  | 类  | 元素 | 优先级 |
   | --------------------------------------- | --- | --- | ---- | ------ |
@@ -132,8 +134,9 @@ CSS 盒模型本质上是一个盒子，封装周围的 HTML 元素，它包括�
 - **!important**
 
   有一个特殊的 CSS 可以用来覆盖所有上面所有优先级计算，不过需要很小心的使用——!important。用于修改特定属性的值，能够覆盖普通规则的层叠。
-
-  > **备注：** 了解 !important 是为了在阅读别人代码的时候知道有什么作用。但是，强烈建议除了非常情况不要使用它。!important 改变了层叠的常规工作方式，它会使调试 CSS 问题非常困难，特别是在大型样式表中
+  ::: info **备注：**
+  了解 !important 是为了在阅读别人代码的时候知道有什么作用。但是，强烈建议除了非常情况不要使用它。!important 改变了层叠的常规工作方式，它会使调试 CSS 问题非常困难，特别是在大型样式表中
+  :::
 
 ### 层叠
 
@@ -188,3 +191,206 @@ CSS 盒模型本质上是一个盒子，封装周围的 HTML 元素，它包括�
   - 元素在跨越特定阈值前表现为相对定位，之后表现为固定定位。
   - 通常用于创建“粘性”导航栏或侧边栏。
   - 使用 `top`、`right`、`bottom`、`left` 属性来控制位置。
+
+## CSS 中的溢出(overflow)
+
+- `overflow` 属性用于控制当一个元素的内容溢出其区域时，如何处理溢出的内容。
+
+- 它可以取以下值：
+  - `visible`:默认值，内容不会被修剪，会呈现在元素框之外。
+  - `hidden`:内容会被修剪，并且其余内容是不可见的。
+  - `scroll`: 内容会被修剪，但是浏览器会显示滚动条以便查看其余的内容。
+  - `auto`:如果内容被修剪，则浏览器会显示滚动条以便查看其余的内容。
+  - `inherit`:继承父元素的 overflow 值
+
+## 隐藏元素的方法
+
+| 方式                          | 占位 | 点击时间 | 子元素复原 |
+| ----------------------------- | ---- | -------- | ---------- |
+| display:none                  | 否   | 否       | 否         |
+| visibility:hidden             | 是   | 否       | 否         |
+| opacity:0                     | 是   | 是       | 是         |
+| position:absolute; top:-999px | 否   | 是       | 否         |
+| clip-path:circle(0)           | 是   | 否       | 否         |
+| transform:scale(0,0)          | 是   | 否       | 否         |
+
+::: info **备注：**
+子元素复原指父元素设置隐藏,子元素能否正常显示,仅在父元素设置`opacity:0`,子元素设置`opacity:1`时子元素可见
+:::
+
+## 浮动与清除浮动
+
+浮动(float)是 CSS 中的一种布局属性，用于控制元素在其父元素中的位置，使元素可以浮动到其父元素的左侧或右侧。浮动通常用于实现文本环绕图片、创建多列布局等效果。
+
+**导致问题:**
+
+- 高度塌陷(Collapsing):浮动元素会导致其父元素的高度塌陷，使父元素无法自动适应浮动元素的高度。元素重叠(Overlapping):浮动元素可能会重叠在一起，导致布局混乱。
+
+**解决方案:**
+
+- 清除浮动(Clearing Floats):在包含浮动元素的父元素之后，可以使用 clear 属性来清除浮动。
+
+  ```css
+  .clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  ```
+
+- 使用布局技巧:为了防止高度塌陷，可以使用现代 CSS 布局技巧，如 Flexbox 和 Grid，来替代浮动布局，
+- 使用 display:inline-b1ock:将需要浮动的元素设置为 display:inline-block，可以模拟浮动效果.但不会导致高度塌陷，因为 inline-block 元素会受到文本行的影响。
+- 使用 position:absolute:在某些情况下，position:absolute 也可以替代浮动，但需要搭配适当的定位属性来控制元素的位置。
+- 使用 overflow: hidden:在包含浮动元素的父元素上添加 overflow:hidden 可以清除浮动，但可能会剪切内容，因此需谨慎使用.
+
+## BFC(Block Formatting Context)
+
+### 1. 什么是 BFC
+
+BFC(Block Formatting Context)就是块级格式化上下文，是页面上一块独立的渲染区域，内部元素盒子都按照其特定的规则进行排列渲染，且区域内的布局与区域外的布局不相互影响。
+
+### 2. BFC 的渲染规则
+
+- 内部的盒子在垂直方向,一个一个地放置
+- 同一个 BFC 内两个相邻盒子的 margin 会重叠(取上下 margin 的最大值)
+- BFC 内部，每一个盒子的左 margin 都会与包含块的左 border 相接触，即使存在浮动也如此
+- 在计算 BFC 的高度时,其内部的浮动元素的高度也会参与计算
+- BFC 区域不会与区域外部的浮动元素重叠
+
+### 3. 如何生成 BFC
+
+- 根元素 html 直接生成 BFC
+- overflow 值不为 visible 和 clip 的块元素
+- position 值为 absolute 或 fixed
+- float 值不为 none
+- display 值为 inline-block、flow-root、table、table-row、table-row-group、table-header-group、table-footer-group、table-cell、table-caption 等
+
+### 4. 如何使用 BFC
+
+- 避免 margin 塌陷
+
+一种是兄弟元素的 margin 塌陷,兄弟都设置了 margin,这时实际 margin 会变为两个 margin 中的较大值
+
+```html
+<div class="container">
+  <div class="box"></div>
+  <div class="box"></div>
+</div>
+```
+
+```css
+.container {
+  width: 800px;
+  height: 800px;
+  background-color: gray;
+}
+.box {
+  margin: 20px;
+  background-color: antiquewhite;
+  width: 200px;
+  height: 200px;
+}
+```
+
+![Example Image](/css/BFC1.png)
+可以将一个元素放到 BFC 内，这样两个盒子不在同一个 BFC 内就不会发生 margin 重叠
+
+```html
+<div class="container">
+  <div class="box"></div>
+  <div class="bfc">
+    <div class="box"></div>
+  </div>
+</div>
+```
+
+```css
+.container {
+  width: 800px;
+  height: 800px;
+  background-color: gray;
+}
+.bfc: {
+  overflow: auto;
+  /*产生BFC*/
+}
+.box {
+  margin: 20px;
+  background-color: antiquewhite;
+  width: 200px;
+  height: 200px;
+}
+```
+
+上图还同时存在父子之间的 margin 塌陷
+父元素未设置 margin-top，子元素设置了 margin-top，会发生 margin 塌陷。预想的情况应该是子元素顶部距离父元素顶部为 margin-top，而实际上子元素顶部紧贴父元素顶部
+
+```html
+<div class="container">
+  <div class="box"></div>
+  <div class="box"></div>
+</div>
+```
+
+```css
+.container {
+  width: 800px;
+  height: 800px;
+  background-color: gray;
+}
+.box {
+  margin: 20px;
+  background-color: antiquewhite;
+  width: 200px;
+  height: 200px;
+}
+```
+
+父子元素都设置 margin-top，可能发生 margin 塌陷。当子元素 margin > 父元素 margin 时显示正常，否则子元素的 margin-top 塌陷到父元素的 margin-top 中，子元素顶部与父元素顶部重合
+
+```html
+<div class="container">
+  <div class="box"></div>
+  <div class="box"></div>
+</div>
+```
+
+```css
+.container {
+  margin-top: 20px;
+  width: 800px;
+  height: 800px;
+  background-color: gray;
+}
+.box {
+  margin: 20px;
+  background-color: antiquewhite;
+  width: 200px;
+  height: 200px;
+}
+```
+
+可以为父元素设置 BFC 属性，使父元素产生 BFC，这样父子元素就不会发生 margin 塌陷
+
+```html
+<div class="container">
+  <div class="box"></div>
+  <div class="box"></div>
+</div>
+```
+
+```css
+.container {
+  overflow:auto;
+  /* 产生BFC*/ 
+  width: 800px;
+  height: 800px;
+  background-color: gray;
+}
+.box {
+  margin: 20px;
+  background-color: antiquewhite;
+  width: 200px;
+  height: 200px;
+}
+```

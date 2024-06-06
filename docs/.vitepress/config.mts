@@ -19,7 +19,8 @@ export default defineConfig({
         text: '前端面试',
         items: [
           { text: 'HTML', link: 'note/html' },
-          { text: 'CSS', link: 'note/css' }
+          { text: 'CSS', link: 'note/css' },
+          { text: '网络与浏览器综合', link: 'note/browser' }
         ]
       }
     ],

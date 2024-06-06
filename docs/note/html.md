@@ -22,7 +22,7 @@ HTML语义化标签是指在HTML文档中使用具有明确定义和语义含义
 ## HTML5新特性
 
 1. 语义化标签(header,footer,section,article..)
-2. 表单类别增强(洗澡) 
+2. 表单类别增强(color,date,tel..) 
 3. Canvas
 4. audio,video音视频
 5. WebAPI
