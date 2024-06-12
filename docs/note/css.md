@@ -2,7 +2,9 @@
 prev:
   text: "HTML"
   link: "/note/html"
-next: false
+next:
+  text: '网络'
+  link: '/note/network'
 ---
 
 ## CSS 盒子模型

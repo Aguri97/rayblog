@@ -20,7 +20,8 @@ export default defineConfig({
         items: [
           { text: 'HTML', link: 'note/html' },
           { text: 'CSS', link: 'note/css' },
-          { text: '网络与浏览器综合', link: 'note/browser' }
+          { text: '网络', link: 'note/network' },
+          { text: '浏览器', link: 'note/browser' },
         ]
       }
     ],
