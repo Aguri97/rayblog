@@ -25,7 +25,14 @@ export default defineConfig({
         ]
       }
     ],
-
+    docFooter: {
+      prev: '上一页',
+      next: '下一页'
+    },
+    outline: {
+      level: [2, 6],
+      label: '目录'
+    },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/ghostking426/rayblog' }
     ]
